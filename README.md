@@ -1,0 +1,2 @@
+osgi-querydsl-templates
+=======================
