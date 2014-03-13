@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    This file is part of Everit - Liquibase OSGi Component.
+    This file is part of Everit - SQL Template Component.
 
-    Everit - Liquibase OSGi Component is free software: you can redistribute it and/or modify
+    Everit - SQL Template Component is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Everit - Liquibase OSGi Component is distributed in the hope that it will be useful,
+    Everit - SQL Template Component is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
-    along with Everit - Liquibase OSGi Component.  If not, see <http://www.gnu.org/licenses/>.
+    along with Everit - SQL Template Component.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -33,13 +34,13 @@
   <version>1.0.0-SNAPSHOT</version>
 
   <packaging>bundle</packaging>
-  <name>Everit - Liquibase OSGi Component</name>
-  <description>Component to be able to use Liquibase from bundles to update/refresh/dumpSQL database schema.</description>
+  <name>Everit - SQL Template Component</name>
+  <description>Component that can configure and publish SQLTemplate services.</description>
 
   <properties>
     <projectpath>osgi-querydsl-templates</projectpath>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
   <scm>
