@@ -34,7 +34,7 @@ public final class SQLTemplatesConstants {
     public static final String DB_TYPE_CUBRID = "CUBRID";
     public static final String DB_TYPE_TERADATA = "Teradata";
     public static final String DB_TYPE_SQLSERVER2005 = "Microsoft SQL Server";
-    public static final String DB_TYPE_SQLSERVER2012 = "Microsoft SQL Server2012";
+    public static final String DB_TYPE_SQLSERVER2012 = "Microsoft SQL Server 2012";
 
     private SQLTemplatesConstants() {
     }

@@ -69,11 +69,13 @@ public class AutoSQLTemplatesComponent {
 
         Builder SQLTemplate = null;
         String dbType = null;
+        String dbVersion = null;
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             dbType = conn.getMetaData().getDatabaseProductName();
+            dbVersion = conn.getMetaData().getDatabaseProductVersion();
         } catch (SQLException e) {
             throw new RuntimeException("Cannot get Database product name of the given DataSource.");
         } finally {
@@ -114,7 +116,11 @@ public class AutoSQLTemplatesComponent {
             SQLTemplate = TeradataTemplates.builder();
         }
         else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2005.equals(dbType)) {
-            SQLTemplate = SQLServer2005Templates.builder();
+            if (dbVersion.contains("2012")) {
+                SQLTemplate = SQLServer2012Templates.builder();
+            } else {
+                SQLTemplate = SQLServer2005Templates.builder();
+            }
         }
         else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2012.equals(dbType)) {
             SQLTemplate = SQLServer2012Templates.builder();
@@ -145,7 +151,8 @@ public class AutoSQLTemplatesComponent {
                 }
             }
         }
-        Object newLineToSingleSpaceObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE);
+        Object newLineToSingleSpaceObject = componentProperties
+                .get(SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE);
         if (newLineToSingleSpaceObject != null) {
             if (!(newLineToSingleSpaceObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for newLineToSingleSpace is Boolean but got "
