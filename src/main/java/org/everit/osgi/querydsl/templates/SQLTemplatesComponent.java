@@ -47,34 +47,34 @@ import com.mysema.query.sql.TeradataTemplates;
 
 @Component(metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-        @Property(name = Constants.PROPERTY_DB_TYPE, options = {
+        @Property(name = SQLTemplatesConstants.PROPERTY_DB_TYPE, options = {
 
-                @PropertyOption(name = Constants.DB_TYPE_POSTGRES, value = "Postgres"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_POSTGRES, value = "Postgres"),
 
-                @PropertyOption(name = Constants.DB_TYPE_H2, value = "H2"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_H2, value = "H2"),
 
-                @PropertyOption(name = Constants.DB_TYPE_MYSQL, value = "MySQL"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_MYSQL, value = "MySQL"),
 
-                @PropertyOption(name = Constants.DB_TYPE_ORACLE, value = "Oracle"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_ORACLE, value = "Oracle"),
 
-                @PropertyOption(name = Constants.DB_TYPE_SQLITE, value = "SQLite"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_SQLITE, value = "SQLite"),
 
-                @PropertyOption(name = Constants.DB_TYPE_CUBRID, value = "CUBRID"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_CUBRID, value = "CUBRID"),
 
-                @PropertyOption(name = Constants.DB_TYPE_DERBY, value = "Derby"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_DERBY, value = "Derby"),
 
-                @PropertyOption(name = Constants.DB_TYPE_HSQLDB, value = "HSQLDB"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_HSQLDB, value = "HSQLDB"),
 
-                @PropertyOption(name = Constants.DB_TYPE_TERADATA, value = "Teradata"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_TERADATA, value = "Teradata"),
 
-                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2005, value = "SQLServer2005"),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_SQLSERVER2005, value = "SQLServer2005"),
 
-                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2012, value = "SQLServer2012"), }),
+                @PropertyOption(name = SQLTemplatesConstants.DB_TYPE_SQLSERVER2012, value = "SQLServer2012"), }),
 
-        @Property(name = Constants.PROPERTY_PRINTSCHEMA, boolValue = false),
-        @Property(name = Constants.PROPERTY_QUOTE, boolValue = true),
-        @Property(name = Constants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = Constants.PROPERTY_ESCAPE, charValue = '\\')
+        @Property(name = SQLTemplatesConstants.PROPERTY_PRINTSCHEMA, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROPERTY_QUOTE, boolValue = true),
+        @Property(name = SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROPERTY_ESCAPE, charValue = '\\')
 })
 public class SQLTemplatesComponent {
 
@@ -85,56 +85,54 @@ public class SQLTemplatesComponent {
 
         Builder SQLTemplate = null;
 
-        Object typeObject = componentProperties.get(Constants.PROPERTY_DB_TYPE);
-        if (typeObject != null) {
-            if (!(typeObject instanceof String)) {
-                throw new RuntimeException("Expected type for TYPE property is String but got " + typeObject.getClass());
+        Object dbTypeObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_DB_TYPE);
+        if (dbTypeObject != null) {
+            if (!(dbTypeObject instanceof String)) {
+                throw new RuntimeException("Expected type for TYPE property is String but got "
+                        + dbTypeObject.getClass());
             } else {
-                switch ((String) typeObject) {
-                case Constants.DB_TYPE_POSTGRES:
+                String dbType = (String) dbTypeObject;
+
+                if (SQLTemplatesConstants.DB_TYPE_POSTGRES.equals(dbType)) {
                     SQLTemplate = PostgresTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_H2:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_H2.equals(dbType)) {
                     SQLTemplate = H2Templates.builder();
-                    break;
-                case Constants.DB_TYPE_MYSQL:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_MYSQL.equals(dbType)) {
                     SQLTemplate = MySQLTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_ORACLE:
-                    SQLTemplate =
-                            OracleTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_CUBRID:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_ORACLE.equals(dbType)) {
+                    SQLTemplate = OracleTemplates.builder();
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_CUBRID.equals(dbType)) {
                     SQLTemplate = CUBRIDTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_DERBY:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_DERBY.equals(dbType)) {
                     SQLTemplate = DerbyTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_HSQLDB:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_HSQLDB.equals(dbType)) {
                     SQLTemplate = HSQLDBTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLITE:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_SQLITE.equals(dbType)) {
                     SQLTemplate = SQLiteTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_TERADATA:
-                    SQLTemplate =
-                            TeradataTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLSERVER2005:
-                    SQLTemplate =
-                            SQLServer2005Templates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLSERVER2012:
-                    SQLTemplate =
-                            SQLServer2012Templates.builder();
-                    break;
-                default:
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_TERADATA.equals(dbType)) {
+                    SQLTemplate = TeradataTemplates.builder();
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2005.equals(dbType)) {
+                    SQLTemplate = SQLServer2005Templates.builder();
+                }
+                else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2012.equals(dbType)) {
+                    SQLTemplate = SQLServer2012Templates.builder();
+                }
+                else {
                     throw new RuntimeException("The given TYPE property is not supported.");
                 }
             }
         }
 
-        Object printSchemaObject = componentProperties.get(Constants.PROPERTY_PRINTSCHEMA);
+        Object printSchemaObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_PRINTSCHEMA);
         if (printSchemaObject != null) {
             if (!(printSchemaObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for printSchema is Boolean but got "
@@ -145,7 +143,7 @@ public class SQLTemplatesComponent {
                 }
             }
         }
-        Object quoteObject = componentProperties.get(Constants.PROPERTY_QUOTE);
+        Object quoteObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_QUOTE);
         if (quoteObject != null) {
             if (!(quoteObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for quote is Boolean but got "
@@ -156,7 +154,7 @@ public class SQLTemplatesComponent {
                 }
             }
         }
-        Object newLineToSingleSpaceObject = componentProperties.get(Constants.PROPERTY_NEWLINETOSINGLESPACE);
+        Object newLineToSingleSpaceObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE);
         if (newLineToSingleSpaceObject != null) {
             if (!(newLineToSingleSpaceObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for newLineToSingleSpace is Boolean but got "
@@ -167,7 +165,7 @@ public class SQLTemplatesComponent {
                 }
             }
         }
-        Object escapeObject = componentProperties.get(Constants.PROPERTY_ESCAPE);
+        Object escapeObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_ESCAPE);
         if (escapeObject != null) {
             if (!(escapeObject instanceof Character)) {
                 throw new RuntimeException("Expected type for escape is Character but got "

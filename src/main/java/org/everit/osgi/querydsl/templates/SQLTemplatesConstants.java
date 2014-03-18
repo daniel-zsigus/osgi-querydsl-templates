@@ -16,7 +16,7 @@
  */
 package org.everit.osgi.querydsl.templates;
 
-public final class Constants {
+public final class SQLTemplatesConstants {
 
     public static final String PROPERTY_DB_TYPE = "dbtype";
     public static final String PROPERTY_PRINTSCHEMA = "printSchema";
@@ -36,6 +36,6 @@ public final class Constants {
     public static final String DB_TYPE_SQLSERVER2005 = "Microsoft SQL Server";
     public static final String DB_TYPE_SQLSERVER2012 = "Microsoft SQL Server2012";
 
-    private Constants() {
+    private SQLTemplatesConstants() {
     }
 }

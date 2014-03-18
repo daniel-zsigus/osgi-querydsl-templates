@@ -52,10 +52,10 @@ import com.mysema.query.sql.TeradataTemplates;
 @Component(metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
         @Property(name = "dataSource.target"),
-        @Property(name = Constants.PROPERTY_PRINTSCHEMA, boolValue = false),
-        @Property(name = Constants.PROPERTY_QUOTE, boolValue = false),
-        @Property(name = Constants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = Constants.PROPERTY_ESCAPE, charValue = '\\')
+        @Property(name = SQLTemplatesConstants.PROPERTY_PRINTSCHEMA, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROPERTY_QUOTE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROPERTY_ESCAPE, charValue = '\\')
 })
 public class AutoSQLTemplatesComponent {
 
@@ -69,52 +69,61 @@ public class AutoSQLTemplatesComponent {
 
         Builder SQLTemplate = null;
         String dbType = null;
+        Connection conn = null;
 
-        try (Connection connection = dataSource.getConnection()) {
-            dbType = connection.getMetaData().getDatabaseProductName();
+        try {
+            conn = dataSource.getConnection();
+            dbType = conn.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
             throw new RuntimeException("Cannot get Database product name of the given DataSource.");
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException("Cannot close database connection.");
+                }
+            }
         }
 
-        switch (dbType) {
-        case Constants.DB_TYPE_POSTGRES:
+        if (SQLTemplatesConstants.DB_TYPE_POSTGRES.equals(dbType)) {
             SQLTemplate = PostgresTemplates.builder();
-            break;
-        case Constants.DB_TYPE_H2:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_H2.equals(dbType)) {
             SQLTemplate = H2Templates.builder();
-            break;
-        case Constants.DB_TYPE_MYSQL:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_MYSQL.equals(dbType)) {
             SQLTemplate = MySQLTemplates.builder();
-            break;
-        case Constants.DB_TYPE_ORACLE:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_ORACLE.equals(dbType)) {
             SQLTemplate = OracleTemplates.builder();
-            break;
-        case Constants.DB_TYPE_CUBRID:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_CUBRID.equals(dbType)) {
             SQLTemplate = CUBRIDTemplates.builder();
-            break;
-        case Constants.DB_TYPE_DERBY:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_DERBY.equals(dbType)) {
             SQLTemplate = DerbyTemplates.builder();
-            break;
-        case Constants.DB_TYPE_HSQLDB:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_HSQLDB.equals(dbType)) {
             SQLTemplate = HSQLDBTemplates.builder();
-            break;
-        case Constants.DB_TYPE_SQLITE:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_SQLITE.equals(dbType)) {
             SQLTemplate = SQLiteTemplates.builder();
-            break;
-        case Constants.DB_TYPE_TERADATA:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_TERADATA.equals(dbType)) {
             SQLTemplate = TeradataTemplates.builder();
-            break;
-        case Constants.DB_TYPE_SQLSERVER2005:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2005.equals(dbType)) {
             SQLTemplate = SQLServer2005Templates.builder();
-            break;
-        case Constants.DB_TYPE_SQLSERVER2012:
+        }
+        else if (SQLTemplatesConstants.DB_TYPE_SQLSERVER2012.equals(dbType)) {
             SQLTemplate = SQLServer2012Templates.builder();
-            break;
-        default:
-            throw new RuntimeException("The given TYPE of the DataSource is not supported.");
+        }
+        else {
+            throw new RuntimeException("The database type of the given DataSource is not supported.");
         }
 
-        Object printSchemaObject = componentProperties.get(Constants.PROPERTY_PRINTSCHEMA);
+        Object printSchemaObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_PRINTSCHEMA);
         if (printSchemaObject != null) {
             if (!(printSchemaObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for printSchema is Boolean but got "
@@ -125,7 +134,7 @@ public class AutoSQLTemplatesComponent {
                 }
             }
         }
-        Object quoteObject = componentProperties.get(Constants.PROPERTY_QUOTE);
+        Object quoteObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_QUOTE);
         if (quoteObject != null) {
             if (!(quoteObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for quote is Boolean but got "
@@ -136,7 +145,7 @@ public class AutoSQLTemplatesComponent {
                 }
             }
         }
-        Object newLineToSingleSpaceObject = componentProperties.get(Constants.PROPERTY_NEWLINETOSINGLESPACE);
+        Object newLineToSingleSpaceObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE);
         if (newLineToSingleSpaceObject != null) {
             if (!(newLineToSingleSpaceObject instanceof Boolean)) {
                 throw new RuntimeException("Expected type for newLineToSingleSpace is Boolean but got "
@@ -147,7 +156,7 @@ public class AutoSQLTemplatesComponent {
                 }
             }
         }
-        Object escapeObject = componentProperties.get(Constants.PROPERTY_ESCAPE);
+        Object escapeObject = componentProperties.get(SQLTemplatesConstants.PROPERTY_ESCAPE);
         if (escapeObject != null) {
             if (!(escapeObject instanceof Character)) {
                 throw new RuntimeException("Expected type for escape is Character but got "
