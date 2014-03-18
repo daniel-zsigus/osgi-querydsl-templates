@@ -47,19 +47,32 @@ import com.mysema.query.sql.TeradataTemplates;
 
 @Component(metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
+        // @Property(name = "dataSource.target"),
+
         @Property(name = Constants.PROPERTY_DB_TYPE, options = {
+
                 @PropertyOption(name = Constants.DB_TYPE_POSTGRES, value = "Postgres"),
+
                 @PropertyOption(name = Constants.DB_TYPE_H2, value = "H2"),
+
                 @PropertyOption(name = Constants.DB_TYPE_MYSQL, value = "MySQL"),
+
                 @PropertyOption(name = Constants.DB_TYPE_ORACLE, value = "Oracle"),
+
                 @PropertyOption(name = Constants.DB_TYPE_SQLITE, value = "SQLite"),
+
                 @PropertyOption(name = Constants.DB_TYPE_CUBRID, value = "CUBRID"),
+
                 @PropertyOption(name = Constants.DB_TYPE_DERBY, value = "Derby"),
+
                 @PropertyOption(name = Constants.DB_TYPE_HSQLDB, value = "HSQLDB"),
+
                 @PropertyOption(name = Constants.DB_TYPE_TERADATA, value = "Teradata"),
+
                 @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2005, value = "SQLServer2005"),
-                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2012, value = "SQLServer2012"),
-        }),
+
+                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2012, value = "SQLServer2012"), }),
+
         @Property(name = Constants.PROPERTY_PRINTSCHEMA, boolValue = false),
         @Property(name = Constants.PROPERTY_QUOTE, boolValue = false),
         @Property(name = Constants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
@@ -69,6 +82,9 @@ public class SQLTemplatesComponent {
 
     private ServiceRegistration<SQLTemplates> service;
 
+    // @Reference
+    // private DataSource datasource;
+
     @Activate
     public void activate(final BundleContext context, final Map<String, Object> componentProperties) {
 
@@ -77,8 +93,7 @@ public class SQLTemplatesComponent {
         Object typeObject = componentProperties.get(Constants.PROPERTY_DB_TYPE);
         if (typeObject != null) {
             if (!(typeObject instanceof String)) {
-                throw new RuntimeException("Expected type for TYPE property is String but got "
-                        + typeObject.getClass());
+                throw new RuntimeException("Expected type for TYPE property is String but got " + typeObject.getClass());
             } else {
                 switch ((String) typeObject) {
                 case Constants.DB_TYPE_POSTGRES:
@@ -91,7 +106,8 @@ public class SQLTemplatesComponent {
                     SQLTemplate = MySQLTemplates.builder();
                     break;
                 case Constants.DB_TYPE_ORACLE:
-                    SQLTemplate = OracleTemplates.builder();
+                    SQLTemplate =
+                            OracleTemplates.builder();
                     break;
                 case Constants.DB_TYPE_CUBRID:
                     SQLTemplate = CUBRIDTemplates.builder();
@@ -106,19 +122,38 @@ public class SQLTemplatesComponent {
                     SQLTemplate = SQLiteTemplates.builder();
                     break;
                 case Constants.DB_TYPE_TERADATA:
-                    SQLTemplate = TeradataTemplates.builder();
+                    SQLTemplate =
+                            TeradataTemplates.builder();
                     break;
                 case Constants.DB_TYPE_SQLSERVER2005:
-                    SQLTemplate = SQLServer2005Templates.builder();
+                    SQLTemplate =
+                            SQLServer2005Templates.builder();
                     break;
                 case Constants.DB_TYPE_SQLSERVER2012:
-                    SQLTemplate = SQLServer2012Templates.builder();
+                    SQLTemplate =
+                            SQLServer2012Templates.builder();
                     break;
                 default:
                     throw new RuntimeException("The given TYPE property is not supported.");
                 }
             }
         }
+
+        /*
+         * String dbType = null; try { dbType = datasource.getConnection().getMetaData().getDatabaseProductName(); }
+         * catch (SQLException e) { throw new RuntimeException("Cannot make connection to the Datasource."); }
+         * 
+         * switch (dbType) { case Constants.DB_TYPE_POSTGRES: SQLTemplate = PostgresTemplates.builder(); break; case
+         * Constants.DB_TYPE_H2: SQLTemplate = H2Templates.builder(); break; case Constants.DB_TYPE_MYSQL: SQLTemplate =
+         * MySQLTemplates.builder(); break; case Constants.DB_TYPE_ORACLE: SQLTemplate = OracleTemplates.builder();
+         * break; case Constants.DB_TYPE_CUBRID: SQLTemplate = CUBRIDTemplates.builder(); break; case
+         * Constants.DB_TYPE_DERBY: SQLTemplate = DerbyTemplates.builder(); break; case Constants.DB_TYPE_HSQLDB:
+         * SQLTemplate = HSQLDBTemplates.builder(); break; case Constants.DB_TYPE_SQLITE: SQLTemplate =
+         * SQLiteTemplates.builder(); break; case Constants.DB_TYPE_TERADATA: SQLTemplate = TeradataTemplates.builder();
+         * break; case Constants.DB_TYPE_SQLSERVER2005: SQLTemplate = SQLServer2005Templates.builder(); break; case
+         * Constants.DB_TYPE_SQLSERVER2012: SQLTemplate = SQLServer2012Templates.builder(); break; default: throw new
+         * RuntimeException("The type of the given Datasource is not supported."); }
+         */
 
         Object printSchemaObject = componentProperties.get(Constants.PROPERTY_PRINTSCHEMA);
         if (printSchemaObject != null) {

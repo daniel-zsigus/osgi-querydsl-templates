@@ -24,17 +24,17 @@ public final class Constants {
     public static final String PROPERTY_ESCAPE = "escape";
     public static final String PROPERTY_NEWLINETOSINGLESPACE = "newLineToSingleSpace";
 
-    public static final String DB_TYPE_POSTGRES = "postgres";
-    public static final String DB_TYPE_H2 = "h2";
-    public static final String DB_TYPE_ORACLE = "oracle";
-    public static final String DB_TYPE_MYSQL = "mysql";
-    public static final String DB_TYPE_SQLITE = "sqlite";
-    public static final String DB_TYPE_HSQLDB = "hsqldb";
-    public static final String DB_TYPE_DERBY = "derby";
-    public static final String DB_TYPE_CUBRID = "cubrid";
-    public static final String DB_TYPE_TERADATA = "teradata";
-    public static final String DB_TYPE_SQLSERVER2005 = "sqlserver2005";
-    public static final String DB_TYPE_SQLSERVER2012 = "sqlserver2012";
+    public static final String DB_TYPE_POSTGRES = "PostgreSQL";
+    public static final String DB_TYPE_H2 = "H2";
+    public static final String DB_TYPE_ORACLE = "Oracle";
+    public static final String DB_TYPE_MYSQL = "MySQL";
+    public static final String DB_TYPE_SQLITE = "SQLite";
+    public static final String DB_TYPE_HSQLDB = "HSQL Database Engine";
+    public static final String DB_TYPE_DERBY = "Apache Derby";
+    public static final String DB_TYPE_CUBRID = "CUBRID";
+    public static final String DB_TYPE_TERADATA = "Teradata";
+    public static final String DB_TYPE_SQLSERVER2005 = "Microsoft SQL Server";
+    public static final String DB_TYPE_SQLSERVER2012 = "Microsoft SQL Server2012";
 
     private Constants() {
     }
