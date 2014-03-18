@@ -17,9 +17,13 @@
 
 package org.everit.osgi.querydsl.templates;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
+
+import javax.sql.DataSource;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -27,7 +31,7 @@ import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.PropertyOption;
+import org.apache.felix.scr.annotations.Reference;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
@@ -47,91 +51,67 @@ import com.mysema.query.sql.TeradataTemplates;
 
 @Component(metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-        @Property(name = Constants.PROPERTY_DB_TYPE, options = {
-
-                @PropertyOption(name = Constants.DB_TYPE_POSTGRES, value = "Postgres"),
-
-                @PropertyOption(name = Constants.DB_TYPE_H2, value = "H2"),
-
-                @PropertyOption(name = Constants.DB_TYPE_MYSQL, value = "MySQL"),
-
-                @PropertyOption(name = Constants.DB_TYPE_ORACLE, value = "Oracle"),
-
-                @PropertyOption(name = Constants.DB_TYPE_SQLITE, value = "SQLite"),
-
-                @PropertyOption(name = Constants.DB_TYPE_CUBRID, value = "CUBRID"),
-
-                @PropertyOption(name = Constants.DB_TYPE_DERBY, value = "Derby"),
-
-                @PropertyOption(name = Constants.DB_TYPE_HSQLDB, value = "HSQLDB"),
-
-                @PropertyOption(name = Constants.DB_TYPE_TERADATA, value = "Teradata"),
-
-                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2005, value = "SQLServer2005"),
-
-                @PropertyOption(name = Constants.DB_TYPE_SQLSERVER2012, value = "SQLServer2012"), }),
-
+        @Property(name = "dataSource.target"),
         @Property(name = Constants.PROPERTY_PRINTSCHEMA, boolValue = false),
-        @Property(name = Constants.PROPERTY_QUOTE, boolValue = true),
+        @Property(name = Constants.PROPERTY_QUOTE, boolValue = false),
         @Property(name = Constants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
         @Property(name = Constants.PROPERTY_ESCAPE, charValue = '\\')
 })
-public class SQLTemplatesComponent {
+public class AutoSQLTemplatesComponent {
 
     private ServiceRegistration<SQLTemplates> service;
+
+    @Reference
+    private DataSource dataSource;
 
     @Activate
     public void activate(final BundleContext context, final Map<String, Object> componentProperties) {
 
         Builder SQLTemplate = null;
+        String dbType = null;
 
-        Object typeObject = componentProperties.get(Constants.PROPERTY_DB_TYPE);
-        if (typeObject != null) {
-            if (!(typeObject instanceof String)) {
-                throw new RuntimeException("Expected type for TYPE property is String but got " + typeObject.getClass());
-            } else {
-                switch ((String) typeObject) {
-                case Constants.DB_TYPE_POSTGRES:
-                    SQLTemplate = PostgresTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_H2:
-                    SQLTemplate = H2Templates.builder();
-                    break;
-                case Constants.DB_TYPE_MYSQL:
-                    SQLTemplate = MySQLTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_ORACLE:
-                    SQLTemplate =
-                            OracleTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_CUBRID:
-                    SQLTemplate = CUBRIDTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_DERBY:
-                    SQLTemplate = DerbyTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_HSQLDB:
-                    SQLTemplate = HSQLDBTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLITE:
-                    SQLTemplate = SQLiteTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_TERADATA:
-                    SQLTemplate =
-                            TeradataTemplates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLSERVER2005:
-                    SQLTemplate =
-                            SQLServer2005Templates.builder();
-                    break;
-                case Constants.DB_TYPE_SQLSERVER2012:
-                    SQLTemplate =
-                            SQLServer2012Templates.builder();
-                    break;
-                default:
-                    throw new RuntimeException("The given TYPE property is not supported.");
-                }
-            }
+        try (Connection connection = dataSource.getConnection()) {
+            dbType = connection.getMetaData().getDatabaseProductName();
+        } catch (SQLException e) {
+            throw new RuntimeException("Cannot get Database product name of the given DataSource.");
+        }
+
+        switch (dbType) {
+        case Constants.DB_TYPE_POSTGRES:
+            SQLTemplate = PostgresTemplates.builder();
+            break;
+        case Constants.DB_TYPE_H2:
+            SQLTemplate = H2Templates.builder();
+            break;
+        case Constants.DB_TYPE_MYSQL:
+            SQLTemplate = MySQLTemplates.builder();
+            break;
+        case Constants.DB_TYPE_ORACLE:
+            SQLTemplate = OracleTemplates.builder();
+            break;
+        case Constants.DB_TYPE_CUBRID:
+            SQLTemplate = CUBRIDTemplates.builder();
+            break;
+        case Constants.DB_TYPE_DERBY:
+            SQLTemplate = DerbyTemplates.builder();
+            break;
+        case Constants.DB_TYPE_HSQLDB:
+            SQLTemplate = HSQLDBTemplates.builder();
+            break;
+        case Constants.DB_TYPE_SQLITE:
+            SQLTemplate = SQLiteTemplates.builder();
+            break;
+        case Constants.DB_TYPE_TERADATA:
+            SQLTemplate = TeradataTemplates.builder();
+            break;
+        case Constants.DB_TYPE_SQLSERVER2005:
+            SQLTemplate = SQLServer2005Templates.builder();
+            break;
+        case Constants.DB_TYPE_SQLSERVER2012:
+            SQLTemplate = SQLServer2012Templates.builder();
+            break;
+        default:
+            throw new RuntimeException("The given TYPE of the DataSource is not supported.");
         }
 
         Object printSchemaObject = componentProperties.get(Constants.PROPERTY_PRINTSCHEMA);
