@@ -35,6 +35,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.log.LogService;
 
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.SQLTemplates.Builder;
@@ -46,27 +47,31 @@ import com.mysema.query.sql.SQLTemplates.Builder;
         @Property(name = SQLTemplatesConstants.PROPERTY_PRINTSCHEMA, boolValue = false),
         @Property(name = SQLTemplatesConstants.PROPERTY_QUOTE, boolValue = false),
         @Property(name = SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROPERTY_ESCAPE, charValue = '\\')
+        @Property(name = SQLTemplatesConstants.PROPERTY_ESCAPE, charValue = '\\'),
+        @Property(name = "logService.target")
 })
 public class AutoSQLTemplatesComponent {
-
-    private ServiceRegistration<SQLTemplates> service;
 
     @Reference
     private DataSource dataSource;
 
+    @Reference
+    private LogService logService;
+
+    private ServiceRegistration<SQLTemplates> serviceRegistration;
+
     @Activate
     public void activate(final BundleContext context, final Map<String, Object> componentProperties) {
 
-        Builder sqlTemplate = null;
-        String dbType = "";
-        String dbVersion = "";
+        Builder sqlTemplateBuilder = null;
+        String dbProductName = "";
+        int dbMajorVersion = 0;
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
-            dbType = conn.getMetaData().getDatabaseProductName();
-            dbVersion = conn.getMetaData().getDatabaseProductVersion();
+            dbProductName = conn.getMetaData().getDatabaseProductName();
+            dbMajorVersion = conn.getMetaData().getDatabaseMajorVersion();
         } catch (SQLException e) {
             throw new RuntimeException("Cannot get Database product name of the given DataSource.");
         } finally {
@@ -79,19 +84,22 @@ public class AutoSQLTemplatesComponent {
             }
         }
 
-        sqlTemplate = SQLTemplateUtils.getBuilderByDBType(dbType, dbVersion);
-        SQLTemplateUtils.setBuilderProperties(sqlTemplate, componentProperties);
+        sqlTemplateBuilder = SQLTemplateUtils.getBuilderByDBProductNameAndMajorVersion(dbProductName, dbMajorVersion,
+                logService);
+        SQLTemplateUtils.setBuilderProperties(sqlTemplateBuilder, componentProperties);
 
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("service.pid", componentProperties.get("service.pid"));
+        Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
 
-        service = context.registerService(SQLTemplates.class, sqlTemplate.build(), properties);
+        SQLTemplates sqlTemplates = sqlTemplateBuilder.build();
+        properties.put(SQLTemplatesConstants.PROPERTY_SELECTED_TEMPLATE, sqlTemplateBuilder.getClass().getName());
+        serviceRegistration = context.registerService(SQLTemplates.class, sqlTemplates, properties);
+        logService.log(LogService.LOG_INFO, "Selected template: " + sqlTemplateBuilder.getClass().getName());
     }
 
     @Deactivate
     public void deactivate(final BundleContext context) {
-        if (service != null) {
-            service.unregister();
+        if (serviceRegistration != null) {
+            serviceRegistration.unregister();
         }
     }
 
