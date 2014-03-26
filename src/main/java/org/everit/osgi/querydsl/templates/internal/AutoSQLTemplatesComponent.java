@@ -58,7 +58,7 @@ import com.mysema.query.sql.TeradataTemplates;
  * Component that automatically detects the type of the database based on the referenced DataSource and registers the
  * right type of SQLTemplates instance.
  */
-@Component(name = "org.everit.osgi.querydsl.templates.AutoSQLTemplates",
+@Component(name = SQLTemplatesConstants.COMPONENT_NAME_AUTO_SQL_TEMPLATES,
         metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
         @Property(name = "dataSource.target"),

@@ -18,6 +18,10 @@ package org.everit.osgi.querydsl.templates;
 
 public final class SQLTemplatesConstants {
 
+    public static final String COMPONENT_NAME_AUTO_SQL_TEMPLATES =
+            "org.everit.osgi.querydsl.templates.AutoSQLTemplates";
+    public static final String COMPONENT_NAME_SQL_TEMPLATES = "org.everit.osgi.querydsl.templates.SQLTemplates";
+
     public static final String DB_PRODUCT_NAME_CUBRID = "CUBRID";
     public static final String DB_PRODUCT_NAME_DERBY = "Apache Derby";
     public static final String DB_PRODUCT_NAME_H2 = "H2";
@@ -30,6 +34,7 @@ public final class SQLTemplatesConstants {
     public static final String DB_PRODUCT_NAME_SYBASE = "Sybase";
     public static final String DB_PRODUCT_NAME_TERADATA = "Teradata";
 
+    public static final String PROP_DB_TYPE = "dbtype";
     public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
     public static final String PROP_DB_TYPE_DERBY = "Derby";
     public static final String PROP_DB_TYPE_H2 = "H2";
@@ -42,9 +47,8 @@ public final class SQLTemplatesConstants {
     public static final String PROP_DB_TYPE_SQLSERVER_2005 = "SQLServer2005";
     public static final String PROP_DB_TYPE_SQLSERVER_2008 = "SQLServer2008";
     public static final String PROP_DB_TYPE_SQLSERVER_2012 = "SQLServer2012";
-    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
 
-    public static final String PROP_DB_TYPE = "dbtype";
+    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
     public static final String PROP_ESCAPE = "escape";
     public static final String PROP_NEWLINETOSINGLESPACE = "newLineToSingleSpace";
     public static final String PROP_PRINTSCHEMA = "printSchema";

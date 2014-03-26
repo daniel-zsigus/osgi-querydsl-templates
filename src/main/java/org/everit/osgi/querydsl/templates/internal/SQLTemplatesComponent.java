@@ -52,7 +52,7 @@ import com.mysema.query.sql.TeradataTemplates;
 /**
  * Component that instantiates and registers SQLTemapltes objects as OSGi service.
  */
-@Component(name = "org.everit.osgi.querydsl.templates.SQLTemplates", metatype = true, configurationFactory = true,
+@Component(name = SQLTemplatesConstants.COMPONENT_NAME_SQL_TEMPLATES, metatype = true, configurationFactory = true,
         policy = ConfigurationPolicy.REQUIRE)
 @Properties({
         @Property(name = SQLTemplatesConstants.PROP_DB_TYPE, value = SQLTemplatesConstants.PROP_DB_TYPE_H2,
