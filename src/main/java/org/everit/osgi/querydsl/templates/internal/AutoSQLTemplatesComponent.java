@@ -33,31 +33,58 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
+import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.log.LogService;
 
+import com.mysema.query.sql.CUBRIDTemplates;
+import com.mysema.query.sql.DerbyTemplates;
+import com.mysema.query.sql.H2Templates;
+import com.mysema.query.sql.HSQLDBTemplates;
+import com.mysema.query.sql.MySQLTemplates;
+import com.mysema.query.sql.OracleTemplates;
+import com.mysema.query.sql.PostgresTemplates;
+import com.mysema.query.sql.SQLServer2005Templates;
+import com.mysema.query.sql.SQLServer2008Templates;
+import com.mysema.query.sql.SQLServer2012Templates;
+import com.mysema.query.sql.SQLServerTemplates;
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.SQLTemplates.Builder;
+import com.mysema.query.sql.SQLiteTemplates;
+import com.mysema.query.sql.TeradataTemplates;
 
+/**
+ * Component that automatically detects the type of the database based on the referenced DataSource and registers the
+ * right type of SQLTemplates instance.
+ */
 @Component(name = "org.everit.osgi.querydsl.templates.AutoSQLTemplates",
         metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
         @Property(name = "dataSource.target"),
-        @Property(name = SQLTemplatesConstants.PROPERTY_PRINTSCHEMA, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROPERTY_QUOTE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROPERTY_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROPERTY_ESCAPE, charValue = '\\'),
+        @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\'),
         @Property(name = "logService.target")
 })
 public class AutoSQLTemplatesComponent {
 
+    /**
+     * The datasource that is used to find out the type of the database.
+     */
     @Reference
     private DataSource dataSource;
 
+    /**
+     * The logging service.
+     */
     @Reference
     private LogService logService;
 
+    /**
+     * SQLTemplates OSGi service registration instance.
+     */
     private ServiceRegistration<SQLTemplates> serviceRegistration;
 
     @Activate
@@ -84,14 +111,17 @@ public class AutoSQLTemplatesComponent {
             }
         }
 
-        sqlTemplateBuilder = SQLTemplateUtils.getBuilderByDBProductNameAndMajorVersion(dbProductName, dbMajorVersion,
-                logService);
+        sqlTemplateBuilder = getBuilderByDBProductNameAndMajorVersion(dbProductName, dbMajorVersion);
+        if (sqlTemplateBuilder == null) {
+            throw new UnknownDatabaseTypeException("The database type with product name '" + dbProductName
+                    + "' is not supported.");
+        }
         SQLTemplateUtils.setBuilderProperties(sqlTemplateBuilder, componentProperties);
 
         Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
 
         SQLTemplates sqlTemplates = sqlTemplateBuilder.build();
-        properties.put(SQLTemplatesConstants.PROPERTY_SELECTED_TEMPLATE, sqlTemplateBuilder.getClass().getName());
+        properties.put(SQLTemplatesConstants.PROP_SELECTED_TEMPLATE, sqlTemplateBuilder.getClass().getName());
         serviceRegistration = context.registerService(SQLTemplates.class, sqlTemplates, properties);
         logService.log(LogService.LOG_INFO, "Selected template: " + sqlTemplateBuilder.getClass().getName());
     }
@@ -101,6 +131,46 @@ public class AutoSQLTemplatesComponent {
         if (serviceRegistration != null) {
             serviceRegistration.unregister();
         }
+    }
+
+    protected Builder getBuilderByDBProductNameAndMajorVersion(final String dbType, final int majorVersion) {
+
+        Builder sqlTemplate = null;
+
+        if (SQLTemplatesConstants.DB_PRODUCT_NAME_POSTGRES.equals(dbType)) {
+            sqlTemplate = PostgresTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_H2.equals(dbType)) {
+            sqlTemplate = H2Templates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_MYSQL.equals(dbType)) {
+            sqlTemplate = MySQLTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_ORACLE.equals(dbType)) {
+            sqlTemplate = OracleTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_CUBRID.equals(dbType)) {
+            sqlTemplate = CUBRIDTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_DERBY.equals(dbType)) {
+            sqlTemplate = DerbyTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_HSQLDB.equals(dbType)) {
+            sqlTemplate = HSQLDBTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SQLITE.equals(dbType)) {
+            sqlTemplate = SQLiteTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_TERADATA.equals(dbType)) {
+            sqlTemplate = TeradataTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SYBASE.equals(dbType)) {
+            sqlTemplate = SQLServerTemplates.builder();
+        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SQLSERVER.equals(dbType)) {
+            if (majorVersion < 9) {
+                sqlTemplate = SQLServerTemplates.builder();
+            } else if (majorVersion == 9) {
+                sqlTemplate = SQLServer2005Templates.builder();
+            } else if (majorVersion == 10) {
+                sqlTemplate = SQLServer2008Templates.builder();
+            } else {
+                sqlTemplate = SQLServer2012Templates.builder();
+            }
+
+        }
+
+        return sqlTemplate;
     }
 
 }

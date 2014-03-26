@@ -30,12 +30,26 @@ public final class SQLTemplatesConstants {
     public static final String DB_PRODUCT_NAME_SYBASE = "Sybase";
     public static final String DB_PRODUCT_NAME_TERADATA = "Teradata";
 
-    public static final String PROPERTY_DB_TYPE = "dbtype";
-    public static final String PROPERTY_ESCAPE = "escape";
-    public static final String PROPERTY_NEWLINETOSINGLESPACE = "newLineToSingleSpace";
-    public static final String PROPERTY_PRINTSCHEMA = "printSchema";
-    public static final String PROPERTY_QUOTE = "quote";
-    public static final String PROPERTY_SELECTED_TEMPLATE = "selected";
+    public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
+    public static final String PROP_DB_TYPE_DERBY = "Derby";
+    public static final String PROP_DB_TYPE_H2 = "H2";
+    public static final String PROP_DB_TYPE_HSQLDB = "HSQLDB";
+    public static final String PROP_DB_TYPE_MYSQL = "MySQL";
+    public static final String PROP_DB_TYPE_ORACLE = "Oracle";
+    public static final String PROP_DB_TYPE_POSTGRES = "Postgres";
+    public static final String PROP_DB_TYPE_SQLITE = "SQLite";
+    public static final String PROP_DB_TYPE_SQLSERVER = "SQLServer";
+    public static final String PROP_DB_TYPE_SQLSERVER_2005 = "SQLServer2005";
+    public static final String PROP_DB_TYPE_SQLSERVER_2008 = "SQLServer2008";
+    public static final String PROP_DB_TYPE_SQLSERVER_2012 = "SQLServer2012";
+    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
+
+    public static final String PROP_DB_TYPE = "dbtype";
+    public static final String PROP_ESCAPE = "escape";
+    public static final String PROP_NEWLINETOSINGLESPACE = "newLineToSingleSpace";
+    public static final String PROP_PRINTSCHEMA = "printSchema";
+    public static final String PROP_QUOTE = "quote";
+    public static final String PROP_SELECTED_TEMPLATE = "selected";
 
     private SQLTemplatesConstants() {
     }
