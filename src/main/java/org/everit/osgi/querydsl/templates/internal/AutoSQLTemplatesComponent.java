@@ -36,6 +36,7 @@ import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
 import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentException;
 import org.osgi.service.log.LogService;
 
 import com.mysema.query.sql.CUBRIDTemplates;
@@ -100,13 +101,13 @@ public class AutoSQLTemplatesComponent {
             dbProductName = conn.getMetaData().getDatabaseProductName();
             dbMajorVersion = conn.getMetaData().getDatabaseMajorVersion();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get Database product name of the given DataSource.");
+            throw new ComponentException("Cannot get Database product name of the given DataSource.", e);
         } finally {
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    throw new RuntimeException("Cannot close database connection.");
+                    throw new ComponentException("Cannot close database connection.", e);
                 }
             }
         }
