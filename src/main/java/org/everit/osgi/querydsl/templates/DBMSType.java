@@ -36,7 +36,7 @@ public enum DBMSType {
     CUBRID {
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_CUBRID;
+            return TYPE_CUBRID;
         }
 
         @Override
@@ -58,7 +58,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_DERBY;
+            return TYPE_DERBY;
         }
     },
 
@@ -66,7 +66,7 @@ public enum DBMSType {
 
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_H2;
+            return TYPE_H2;
         }
 
         @Override
@@ -89,14 +89,14 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_HSQLDB;
+            return TYPE_HSQLDB;
         }
 
     },
     MYSQL {
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_MYSQL;
+            return TYPE_MYSQL;
         }
 
         @Override
@@ -107,7 +107,7 @@ public enum DBMSType {
     ORACLE {
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_ORACLE;
+            return TYPE_ORACLE;
         }
 
         @Override
@@ -129,14 +129,14 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_POSTGRES;
+            return TYPE_POSTGRES;
         }
 
     },
     SQLITE {
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_SQLITE;
+            return TYPE_SQLITE;
         }
 
         @Override
@@ -162,7 +162,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_SQLSERVER;
+            return TYPE_SQLSERVER;
         }
 
     },
@@ -184,7 +184,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_SQLSERVER_2005;
+            return TYPE_SQLSERVER_2005;
         }
     },
     SQLSERVER_2008 {
@@ -205,7 +205,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_SQLSERVER_2008;
+            return TYPE_SQLSERVER_2008;
         }
     },
     SQLSERVER_2012 {
@@ -226,7 +226,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return PROP_DB_TYPE_SQLSERVER_2012;
+            return TYPE_SQLSERVER_2012;
         }
     },
     SYBASE {
@@ -244,7 +244,7 @@ public enum DBMSType {
 
         @Override
         public String getProductName() {
-            return PROP_DB_TYPE_TERADATA;
+            return TYPE_TERADATA;
         }
 
         @Override
@@ -254,19 +254,19 @@ public enum DBMSType {
 
     };
 
-    public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
-    public static final String PROP_DB_TYPE_DERBY = "Derby";
-    public static final String PROP_DB_TYPE_H2 = "H2";
-    public static final String PROP_DB_TYPE_HSQLDB = "HSQLDB";
-    public static final String PROP_DB_TYPE_MYSQL = "MySQL";
-    public static final String PROP_DB_TYPE_ORACLE = "Oracle";
-    public static final String PROP_DB_TYPE_POSTGRES = "Postgres";
-    public static final String PROP_DB_TYPE_SQLITE = "SQLite";
-    public static final String PROP_DB_TYPE_SQLSERVER = "SQLServer";
-    public static final String PROP_DB_TYPE_SQLSERVER_2005 = "SQLServer2005";
-    public static final String PROP_DB_TYPE_SQLSERVER_2008 = "SQLServer2008";
-    public static final String PROP_DB_TYPE_SQLSERVER_2012 = "SQLServer2012";
-    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
+    public static final String TYPE_CUBRID = "CUBRID";
+    public static final String TYPE_DERBY = "Derby";
+    public static final String TYPE_H2 = "H2";
+    public static final String TYPE_HSQLDB = "HSQLDB";
+    public static final String TYPE_MYSQL = "MySQL";
+    public static final String TYPE_ORACLE = "Oracle";
+    public static final String TYPE_POSTGRES = "Postgres";
+    public static final String TYPE_SQLITE = "SQLite";
+    public static final String TYPE_SQLSERVER = "SQLServer";
+    public static final String TYPE_SQLSERVER_2005 = "SQLServer2005";
+    public static final String TYPE_SQLSERVER_2008 = "SQLServer2008";
+    public static final String TYPE_SQLSERVER_2012 = "SQLServer2012";
+    public static final String TYPE_TERADATA = "Teradata";
 
     public static final DBMSType getByProductNameAndMajorVersion(final String productName, final int majorVersion) {
         for (DBMSType type : values()) {
