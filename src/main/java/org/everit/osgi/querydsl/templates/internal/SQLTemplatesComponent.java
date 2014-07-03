@@ -20,6 +20,7 @@ package org.everit.osgi.querydsl.templates.internal;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -29,6 +30,7 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.PropertyOption;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
+import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentException;
@@ -40,70 +42,74 @@ import com.mysema.query.sql.SQLTemplates.Builder;
  * Component that instantiates and registers SQLTemapltes objects as OSGi service.
  */
 @Component(name = SQLTemplatesConstants.COMPONENT_NAME_SQL_TEMPLATES, metatype = true, configurationFactory = true,
-policy = ConfigurationPolicy.REQUIRE)
+        policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-    @Property(name = SQLTemplatesConstants.PROP_DB_TYPE, value = SQLTemplatesConstants.PROP_DB_TYPE_H2,
-            options = {
-            @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_H2,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_H2),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_DERBY,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_DERBY),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008),
-                    @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012,
-                    value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012) }),
-                    @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
-                    @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = true),
-                    @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
-                    @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\')
+        @Property(name = SQLTemplatesConstants.PROP_DB_TYPE, value = SQLTemplatesConstants.PROP_DB_TYPE_H2,
+                options = {
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_H2,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_H2),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_DERBY,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_DERBY),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008),
+                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012,
+                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012) }),
+        @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = true),
+        @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
+        @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\')
 })
 public class SQLTemplatesComponent {
 
     private ServiceRegistration<SQLTemplates> serviceRegistration;
 
+    /**
+     * Configures an {@link SQLTemplates} instance based on {@code componentProperties} and registers it as an OSGi
+     * service using {@code context}.
+     *
+     * @param context
+     * @param componentProperties
+     * @throws ComponentException
+     */
     @Activate
     public void activate(final BundleContext context, final Map<String, Object> componentProperties) {
-
-        Builder sqlTemplate = null;
-
-        Object dbTypeObject = componentProperties.get(SQLTemplatesConstants.PROP_DB_TYPE);
-        if (dbTypeObject != null) {
-            if (!(dbTypeObject instanceof String)) {
-                throw new ComponentException("Expected type for TYPE property is String but got "
-                        + dbTypeObject.getClass());
-            } else {
-                String dbType = (String) dbTypeObject;
-                sqlTemplate = instantiateBuilder(dbType);
-            }
-        } else {
-            throw new ComponentException(SQLTemplatesConstants.PROP_DB_TYPE + " property must be set.");
+        try {
+            Object dbTypeObject = componentProperties.get(SQLTemplatesConstants.PROP_DB_TYPE);
+            Builder sqlTemplate = instantiateBuilder((String) dbTypeObject);
+            new SQLTemplateConfigurator(sqlTemplate, componentProperties).configure();
+            Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
+            serviceRegistration = context.registerService(SQLTemplates.class, sqlTemplate.build(), properties);
+        } catch (UnknownDatabaseTypeException e) {
+            throw new ComponentException(e);
+        } catch (NullPointerException | ClassCastException e) {
+            throw new ComponentException(SQLTemplatesConstants.PROP_DB_TYPE
+                    + " property must be set and must be a String", e);
         }
-
-        new SQLTemplateConfigurator(sqlTemplate, componentProperties).configure();
-
-        Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
-
-        serviceRegistration = context.registerService(SQLTemplates.class, sqlTemplate.build(), properties);
     }
 
+    /**
+     * Unregisters the {@link SQLTemplates} instance which has been registered by {@link #activate(BundleContext, Map)}.
+     *
+     * @param context
+     */
     @Deactivate
     public void deactivate(final BundleContext context) {
         if (serviceRegistration != null) {
@@ -111,12 +117,13 @@ public class SQLTemplatesComponent {
         }
     }
 
-    protected Builder instantiateBuilder(final String dbType) {
+    private Builder instantiateBuilder(final String dbType) {
+        Objects.requireNonNull(dbType, "dbType cannot be null");
         for (DBMSType type : DBMSType.values()) {
             if (type.toString().equals(dbType)) {
                 return type.getSQLTemplatesBuilder();
             }
         }
-        return null;
+        throw new UnknownDatabaseTypeException("database type [" + dbType + "] is not supported");
     }
 }

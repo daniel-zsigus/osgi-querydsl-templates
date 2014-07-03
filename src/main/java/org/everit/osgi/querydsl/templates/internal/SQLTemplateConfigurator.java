@@ -24,68 +24,82 @@ import org.osgi.service.component.ComponentException;
 
 import com.mysema.query.sql.SQLTemplates.Builder;
 
+/**
+ * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the component.
+ */
 public final class SQLTemplateConfigurator {
 
     private final Builder sqlTemplate;
 
     private final Map<String, Object> config;
 
+    /**
+     * @param sqlTemplate
+     *            The sql template to be configured.
+     * @param properties
+     *            The component configuration to be used to set up the {@code sqlTemplate}
+     * @throws NullPointerException
+     *             if any of the parameters is {@code null}
+     */
     public SQLTemplateConfigurator(final Builder sqlTemplate, final Map<String, Object> config) {
         this.sqlTemplate = Objects.requireNonNull(sqlTemplate, "sqlTemplate cannot be null");
         this.config = Objects.requireNonNull(config, "config cannot be null");
     }
 
+    private ComponentException componentExceptionForInvalidValue(final String name, final Object rawValue,
+            final String expectedType) {
+        return new ComponentException("config[" + name + "] is expected to be a " + expectedType + ", got "
+                + rawValue.getClass()
+                + " instead");
+    }
+
     /**
      * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the component.
      *
-     * @param sqlTemplate
-     *            The sql template instance.
-     * @param properties
-     *            The configuration of the component.
+     *
+     *
      */
     public void configure() {
-        Object printSchemaObject = config.get(SQLTemplatesConstants.PROP_PRINTSCHEMA);
-        if (printSchemaObject != null) {
-            if (!(printSchemaObject instanceof Boolean)) {
-                throw new ComponentException("Expected type for printSchema is Boolean but got "
-                        + printSchemaObject.getClass());
-            } else {
-                if ((Boolean) printSchemaObject) {
-                    sqlTemplate.printSchema();
-                }
-            }
+        if (getBooleanProp(SQLTemplatesConstants.PROP_PRINTSCHEMA)) {
+            sqlTemplate.printSchema();
         }
-        Object quoteObject = config.get(SQLTemplatesConstants.PROP_QUOTE);
-        if (quoteObject != null) {
-            if (!(quoteObject instanceof Boolean)) {
-                throw new ComponentException("Expected type for quote is Boolean but got "
-                        + quoteObject.getClass());
-            } else {
-                if ((Boolean) quoteObject) {
-                    sqlTemplate.quote();
-                }
-            }
+        if (getBooleanProp(SQLTemplatesConstants.PROP_QUOTE)) {
+            sqlTemplate.quote();
         }
-        Object newLineToSingleSpaceObject = config
-                .get(SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE);
-        if (newLineToSingleSpaceObject != null) {
-            if (!(newLineToSingleSpaceObject instanceof Boolean)) {
-                throw new RuntimeException("Expected type for newLineToSingleSpace is Boolean but got "
-                        + newLineToSingleSpaceObject.getClass());
-            } else {
-                if ((Boolean) newLineToSingleSpaceObject) {
-                    sqlTemplate.newLineToSingleSpace();
-                }
-            }
+        if (getBooleanProp(SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE)) {
+            sqlTemplate.newLineToSingleSpace();
         }
-        Object escapeObject = config.get(SQLTemplatesConstants.PROP_ESCAPE);
-        if (escapeObject != null) {
-            if (!(escapeObject instanceof Character)) {
-                throw new RuntimeException("Expected type for escape is Character but got "
-                        + escapeObject.getClass());
-            } else {
-                sqlTemplate.escape((Character) escapeObject);
-            }
+        Character escapeChar = getCharacterProp(SQLTemplatesConstants.PROP_ESCAPE);
+        if (escapeChar != null) {
+            sqlTemplate.escape(escapeChar.charValue());
+        }
+    }
+
+    /**
+     * @param name
+     * @return {@link Boolean#FALSE} if config[name] is not found
+     */
+    private Boolean getBooleanProp(final String name) {
+        Object rawValue = null;
+        try {
+            rawValue = config.get(name);
+            return rawValue == null ? Boolean.FALSE : (Boolean) rawValue;
+        } catch (ClassCastException e) {
+            throw componentExceptionForInvalidValue(name, rawValue, "Boolean");
+        }
+    }
+
+    /**
+     * @param name
+     * @return {@code null} if config[name] is not found
+     */
+    private Character getCharacterProp(final String name) {
+        Object rawValue = null;
+        try {
+            rawValue = config.get(name);
+            return (Character) rawValue;
+        } catch (ClassCastException e) {
+            throw componentExceptionForInvalidValue(name, rawValue, "Character");
         }
     }
 
