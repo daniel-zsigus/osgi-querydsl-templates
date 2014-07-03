@@ -39,21 +39,8 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentException;
 import org.osgi.service.log.LogService;
 
-import com.mysema.query.sql.CUBRIDTemplates;
-import com.mysema.query.sql.DerbyTemplates;
-import com.mysema.query.sql.H2Templates;
-import com.mysema.query.sql.HSQLDBTemplates;
-import com.mysema.query.sql.MySQLTemplates;
-import com.mysema.query.sql.OracleTemplates;
-import com.mysema.query.sql.PostgresTemplates;
-import com.mysema.query.sql.SQLServer2005Templates;
-import com.mysema.query.sql.SQLServer2008Templates;
-import com.mysema.query.sql.SQLServer2012Templates;
-import com.mysema.query.sql.SQLServerTemplates;
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.SQLTemplates.Builder;
-import com.mysema.query.sql.SQLiteTemplates;
-import com.mysema.query.sql.TeradataTemplates;
 
 /**
  * Component that automatically detects the type of the database based on the referenced DataSource and registers the
@@ -135,43 +122,7 @@ public class AutoSQLTemplatesComponent {
     }
 
     protected Builder getBuilderByDBProductNameAndMajorVersion(final String dbType, final int majorVersion) {
-
-        Builder sqlTemplate = null;
-
-        if (SQLTemplatesConstants.DB_PRODUCT_NAME_POSTGRES.equals(dbType)) {
-            sqlTemplate = PostgresTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_H2.equals(dbType)) {
-            sqlTemplate = H2Templates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_MYSQL.equals(dbType)) {
-            sqlTemplate = MySQLTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_ORACLE.equals(dbType)) {
-            sqlTemplate = OracleTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_CUBRID.equals(dbType)) {
-            sqlTemplate = CUBRIDTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_DERBY.equals(dbType)) {
-            sqlTemplate = DerbyTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_HSQLDB.equals(dbType)) {
-            sqlTemplate = HSQLDBTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SQLITE.equals(dbType)) {
-            sqlTemplate = SQLiteTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_TERADATA.equals(dbType)) {
-            sqlTemplate = TeradataTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SYBASE.equals(dbType)) {
-            sqlTemplate = SQLServerTemplates.builder();
-        } else if (SQLTemplatesConstants.DB_PRODUCT_NAME_SQLSERVER.equals(dbType)) {
-            if (majorVersion < 9) {
-                sqlTemplate = SQLServerTemplates.builder();
-            } else if (majorVersion == 9) {
-                sqlTemplate = SQLServer2005Templates.builder();
-            } else if (majorVersion == 10) {
-                sqlTemplate = SQLServer2008Templates.builder();
-            } else {
-                sqlTemplate = SQLServer2012Templates.builder();
-            }
-
-        }
-
-        return sqlTemplate;
+        return DBMSType.getByProductNameAndMajorVersion(dbType, majorVersion).getSQLTemplatesBuilder();
     }
 
 }

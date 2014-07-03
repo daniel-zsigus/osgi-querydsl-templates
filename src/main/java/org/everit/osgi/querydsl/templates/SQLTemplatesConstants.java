@@ -16,6 +16,14 @@
  */
 package org.everit.osgi.querydsl.templates;
 
+import org.everit.osgi.querydsl.templates.internal.DBMSType;
+
+/**
+ * Use {@link DBMSType} instead.
+ *
+ * @author bence
+ */
+@Deprecated
 public final class SQLTemplatesConstants {
 
     public static final String COMPONENT_NAME_AUTO_SQL_TEMPLATES =
