@@ -16,7 +16,7 @@
  */
 package org.everit.osgi.querydsl.templates.internal;
 
-import org.osgi.service.component.ComponentException;
+import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 
 import com.mysema.query.sql.CUBRIDTemplates;
 import com.mysema.query.sql.DerbyTemplates;
@@ -57,9 +57,15 @@ public enum DBMSType {
         public Builder getSQLTemplatesBuilder() {
             return DerbyTemplates.builder();
         }
+
+        @Override
+        public String toString() {
+            return "Derby";
+        }
     },
 
     H2 {
+
         @Override
         public String getProductName() {
             return "H2";
@@ -81,6 +87,11 @@ public enum DBMSType {
         @Override
         public Builder getSQLTemplatesBuilder() {
             return HSQLDBTemplates.builder();
+        }
+
+        @Override
+        public String toString() {
+            return "HSQLDB";
         }
 
     },
@@ -118,6 +129,11 @@ public enum DBMSType {
             return PostgresTemplates.builder();
         }
 
+        @Override
+        public String toString() {
+            return "Postgres";
+        }
+
     },
     SQLITE {
         @Override
@@ -146,6 +162,11 @@ public enum DBMSType {
             return SQLServerTemplates.builder();
         }
 
+        @Override
+        public String toString() {
+            return "SQLServer";
+        }
+
     },
     SQLSERVER_2005 {
         @Override
@@ -161,6 +182,11 @@ public enum DBMSType {
         @Override
         public Builder getSQLTemplatesBuilder() {
             return SQLServer2005Templates.builder();
+        }
+
+        @Override
+        public String toString() {
+            return "SQLServer2005";
         }
     },
     SQLSERVER_2008 {
@@ -178,6 +204,11 @@ public enum DBMSType {
         public Builder getSQLTemplatesBuilder() {
             return SQLServer2008Templates.builder();
         }
+
+        @Override
+        public String toString() {
+            return "SQLServer2008";
+        }
     },
     SQLSERVER_2012 {
         @Override
@@ -193,6 +224,11 @@ public enum DBMSType {
         @Override
         public Builder getSQLTemplatesBuilder() {
             return SQLServer2012Templates.builder();
+        }
+
+        @Override
+        public String toString() {
+            return "SQLServer2012";
         }
     },
     SYBASE {
@@ -226,7 +262,7 @@ public enum DBMSType {
                 return type;
             }
         }
-        throw new ComponentException("database " + productName + " (major version: " + majorVersion
+        throw new UnknownDatabaseTypeException("database " + productName + " (major version: " + majorVersion
                 + ") is not supported");
     }
 
@@ -237,5 +273,10 @@ public enum DBMSType {
     public abstract String getProductName();
 
     public abstract Builder getSQLTemplatesBuilder();
+
+    @Override
+    public String toString() {
+        return getProductName();
+    }
 
 }

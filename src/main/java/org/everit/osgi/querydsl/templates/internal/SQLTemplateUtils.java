@@ -17,6 +17,7 @@
 package org.everit.osgi.querydsl.templates.internal;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
 import org.osgi.service.component.ComponentException;
@@ -25,20 +26,20 @@ import com.mysema.query.sql.SQLTemplates.Builder;
 
 /**
  * Common util methods for all components.
- * 
+ *
  */
 public final class SQLTemplateUtils {
 
     /**
      * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the component.
-     * 
+     *
      * @param sqlTemplate
      *            The sql template instance.
      * @param properties
      *            The configuration of the component.
      */
     public static void setBuilderProperties(final Builder sqlTemplate, final Map<String, Object> properties) {
-
+        Objects.requireNonNull(sqlTemplate, "sqlTemplate cannot be null");
         Object printSchemaObject = properties.get(SQLTemplatesConstants.PROP_PRINTSCHEMA);
         if (printSchemaObject != null) {
             if (!(printSchemaObject instanceof Boolean)) {

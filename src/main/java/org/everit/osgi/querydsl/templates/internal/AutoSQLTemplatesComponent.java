@@ -33,7 +33,6 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
-import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentException;
@@ -99,11 +98,9 @@ public class AutoSQLTemplatesComponent {
             }
         }
 
-        sqlTemplateBuilder = getBuilderByDBProductNameAndMajorVersion(dbProductName, dbMajorVersion);
-        if (sqlTemplateBuilder == null) {
-            throw new UnknownDatabaseTypeException("The database type with product name '" + dbProductName
-                    + "' is not supported.");
-        }
+        sqlTemplateBuilder = DBMSType.getByProductNameAndMajorVersion(dbProductName, dbMajorVersion)
+                .getSQLTemplatesBuilder();
+
         SQLTemplateUtils.setBuilderProperties(sqlTemplateBuilder, componentProperties);
 
         Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
@@ -119,10 +116,6 @@ public class AutoSQLTemplatesComponent {
         if (serviceRegistration != null) {
             serviceRegistration.unregister();
         }
-    }
-
-    protected Builder getBuilderByDBProductNameAndMajorVersion(final String dbType, final int majorVersion) {
-        return DBMSType.getByProductNameAndMajorVersion(dbType, majorVersion).getSQLTemplatesBuilder();
     }
 
 }

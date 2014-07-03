@@ -23,24 +23,11 @@ import org.everit.osgi.querydsl.templates.internal.DBMSType;
  *
  * @author bence
  */
-@Deprecated
 public final class SQLTemplatesConstants {
 
     public static final String COMPONENT_NAME_AUTO_SQL_TEMPLATES =
             "org.everit.osgi.querydsl.templates.AutoSQLTemplates";
     public static final String COMPONENT_NAME_SQL_TEMPLATES = "org.everit.osgi.querydsl.templates.SQLTemplates";
-
-    public static final String DB_PRODUCT_NAME_CUBRID = "CUBRID";
-    public static final String DB_PRODUCT_NAME_DERBY = "Apache Derby";
-    public static final String DB_PRODUCT_NAME_H2 = "H2";
-    public static final String DB_PRODUCT_NAME_HSQLDB = "HSQL Database Engine";
-    public static final String DB_PRODUCT_NAME_MYSQL = "MySQL";
-    public static final String DB_PRODUCT_NAME_ORACLE = "Oracle";
-    public static final String DB_PRODUCT_NAME_POSTGRES = "PostgreSQL";
-    public static final String DB_PRODUCT_NAME_SQLITE = "SQLite";
-    public static final String DB_PRODUCT_NAME_SQLSERVER = "Microsoft SQL Server";
-    public static final String DB_PRODUCT_NAME_SYBASE = "Sybase";
-    public static final String DB_PRODUCT_NAME_TERADATA = "Teradata";
 
     public static final String PROP_DB_TYPE = "dbtype";
     public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
