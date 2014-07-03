@@ -97,7 +97,7 @@ public class SQLTemplatesComponent {
             throw new ComponentException(SQLTemplatesConstants.PROP_DB_TYPE + " property must be set.");
         }
 
-        SQLTemplateUtils.setBuilderProperties(sqlTemplate, componentProperties);
+        new SQLTemplateConfigurator(sqlTemplate, componentProperties).configure();
 
         Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
 

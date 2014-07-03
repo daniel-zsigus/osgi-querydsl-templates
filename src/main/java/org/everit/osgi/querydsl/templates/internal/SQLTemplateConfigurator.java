@@ -24,11 +24,16 @@ import org.osgi.service.component.ComponentException;
 
 import com.mysema.query.sql.SQLTemplates.Builder;
 
-/**
- * Common util methods for all components.
- *
- */
-public final class SQLTemplateUtils {
+public final class SQLTemplateConfigurator {
+
+    private final Builder sqlTemplate;
+
+    private final Map<String, Object> config;
+
+    public SQLTemplateConfigurator(final Builder sqlTemplate, final Map<String, Object> config) {
+        this.sqlTemplate = Objects.requireNonNull(sqlTemplate, "sqlTemplate cannot be null");
+        this.config = Objects.requireNonNull(config, "config cannot be null");
+    }
 
     /**
      * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the component.
@@ -38,9 +43,8 @@ public final class SQLTemplateUtils {
      * @param properties
      *            The configuration of the component.
      */
-    public static void setBuilderProperties(final Builder sqlTemplate, final Map<String, Object> properties) {
-        Objects.requireNonNull(sqlTemplate, "sqlTemplate cannot be null");
-        Object printSchemaObject = properties.get(SQLTemplatesConstants.PROP_PRINTSCHEMA);
+    public void configure() {
+        Object printSchemaObject = config.get(SQLTemplatesConstants.PROP_PRINTSCHEMA);
         if (printSchemaObject != null) {
             if (!(printSchemaObject instanceof Boolean)) {
                 throw new ComponentException("Expected type for printSchema is Boolean but got "
@@ -51,7 +55,7 @@ public final class SQLTemplateUtils {
                 }
             }
         }
-        Object quoteObject = properties.get(SQLTemplatesConstants.PROP_QUOTE);
+        Object quoteObject = config.get(SQLTemplatesConstants.PROP_QUOTE);
         if (quoteObject != null) {
             if (!(quoteObject instanceof Boolean)) {
                 throw new ComponentException("Expected type for quote is Boolean but got "
@@ -62,7 +66,7 @@ public final class SQLTemplateUtils {
                 }
             }
         }
-        Object newLineToSingleSpaceObject = properties
+        Object newLineToSingleSpaceObject = config
                 .get(SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE);
         if (newLineToSingleSpaceObject != null) {
             if (!(newLineToSingleSpaceObject instanceof Boolean)) {
@@ -74,7 +78,7 @@ public final class SQLTemplateUtils {
                 }
             }
         }
-        Object escapeObject = properties.get(SQLTemplatesConstants.PROP_ESCAPE);
+        Object escapeObject = config.get(SQLTemplatesConstants.PROP_ESCAPE);
         if (escapeObject != null) {
             if (!(escapeObject instanceof Character)) {
                 throw new RuntimeException("Expected type for escape is Character but got "
@@ -83,9 +87,6 @@ public final class SQLTemplateUtils {
                 sqlTemplate.escape((Character) escapeObject);
             }
         }
-
     }
 
-    private SQLTemplateUtils() {
-    }
 }

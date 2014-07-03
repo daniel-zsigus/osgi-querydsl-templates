@@ -46,14 +46,14 @@ import com.mysema.query.sql.SQLTemplates.Builder;
  * right type of SQLTemplates instance.
  */
 @Component(name = SQLTemplatesConstants.COMPONENT_NAME_AUTO_SQL_TEMPLATES,
-        metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
+metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-        @Property(name = "dataSource.target"),
-        @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\'),
-        @Property(name = "logService.target")
+    @Property(name = "dataSource.target"),
+    @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\'),
+    @Property(name = "logService.target")
 })
 public class AutoSQLTemplatesComponent {
 
@@ -80,28 +80,18 @@ public class AutoSQLTemplatesComponent {
         Builder sqlTemplateBuilder = null;
         String dbProductName = "";
         int dbMajorVersion = 0;
-        Connection conn = null;
 
-        try {
-            conn = dataSource.getConnection();
+        try (Connection conn = dataSource.getConnection()) {
             dbProductName = conn.getMetaData().getDatabaseProductName();
             dbMajorVersion = conn.getMetaData().getDatabaseMajorVersion();
         } catch (SQLException e) {
             throw new ComponentException("Cannot get Database product name of the given DataSource.", e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new ComponentException("Cannot close database connection.", e);
-                }
-            }
         }
 
         sqlTemplateBuilder = DBMSType.getByProductNameAndMajorVersion(dbProductName, dbMajorVersion)
                 .getSQLTemplatesBuilder();
 
-        SQLTemplateUtils.setBuilderProperties(sqlTemplateBuilder, componentProperties);
+        new SQLTemplateConfigurator(sqlTemplateBuilder, componentProperties).configure();
 
         Dictionary<String, Object> properties = new Hashtable<String, Object>(componentProperties);
 
