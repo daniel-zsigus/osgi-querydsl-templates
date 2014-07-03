@@ -32,6 +32,7 @@ import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
+import org.everit.osgi.querydsl.templates.DBMSType;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -45,7 +46,7 @@ import com.mysema.query.sql.SQLTemplates.Builder;
  * Component that automatically detects the type of the database based on the referenced DataSource and registers the
  * right type of SQLTemplates instance.
  */
-@Component(name = SQLTemplatesConstants.COMPONENT_NAME_AUTO_SQL_TEMPLATES,
+@Component(name = SQLTemplatesConstants.SERVICE_FACTORY_PID__AUTO_SQL_TEMPLATES,
         metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
         @Property(name = "dataSource.target"),

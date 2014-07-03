@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Everit - SQL Template Component.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.everit.osgi.querydsl.templates.internal;
-
-import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
+package org.everit.osgi.querydsl.templates;
 
 import com.mysema.query.sql.CUBRIDTemplates;
 import com.mysema.query.sql.DerbyTemplates;
@@ -38,7 +36,7 @@ public enum DBMSType {
     CUBRID {
         @Override
         public String getProductName() {
-            return "CUBRID";
+            return PROP_DB_TYPE_CUBRID;
         }
 
         @Override
@@ -60,7 +58,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "Derby";
+            return PROP_DB_TYPE_DERBY;
         }
     },
 
@@ -68,7 +66,7 @@ public enum DBMSType {
 
         @Override
         public String getProductName() {
-            return "H2";
+            return PROP_DB_TYPE_H2;
         }
 
         @Override
@@ -91,14 +89,14 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "HSQLDB";
+            return PROP_DB_TYPE_HSQLDB;
         }
 
     },
     MYSQL {
         @Override
         public String getProductName() {
-            return "MySQL";
+            return PROP_DB_TYPE_MYSQL;
         }
 
         @Override
@@ -109,7 +107,7 @@ public enum DBMSType {
     ORACLE {
         @Override
         public String getProductName() {
-            return "Oracle";
+            return PROP_DB_TYPE_ORACLE;
         }
 
         @Override
@@ -131,14 +129,14 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "Postgres";
+            return PROP_DB_TYPE_POSTGRES;
         }
 
     },
     SQLITE {
         @Override
         public String getProductName() {
-            return "SQLite";
+            return PROP_DB_TYPE_SQLITE;
         }
 
         @Override
@@ -164,7 +162,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "SQLServer";
+            return PROP_DB_TYPE_SQLSERVER;
         }
 
     },
@@ -186,7 +184,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "SQLServer2005";
+            return PROP_DB_TYPE_SQLSERVER_2005;
         }
     },
     SQLSERVER_2008 {
@@ -207,7 +205,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "SQLServer2008";
+            return PROP_DB_TYPE_SQLSERVER_2008;
         }
     },
     SQLSERVER_2012 {
@@ -228,7 +226,7 @@ public enum DBMSType {
 
         @Override
         public String toString() {
-            return "SQLServer2012";
+            return PROP_DB_TYPE_SQLSERVER_2012;
         }
     },
     SYBASE {
@@ -246,7 +244,7 @@ public enum DBMSType {
 
         @Override
         public String getProductName() {
-            return "Teradata";
+            return PROP_DB_TYPE_TERADATA;
         }
 
         @Override
@@ -255,6 +253,20 @@ public enum DBMSType {
         }
 
     };
+
+    public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
+    public static final String PROP_DB_TYPE_DERBY = "Derby";
+    public static final String PROP_DB_TYPE_H2 = "H2";
+    public static final String PROP_DB_TYPE_HSQLDB = "HSQLDB";
+    public static final String PROP_DB_TYPE_MYSQL = "MySQL";
+    public static final String PROP_DB_TYPE_ORACLE = "Oracle";
+    public static final String PROP_DB_TYPE_POSTGRES = "Postgres";
+    public static final String PROP_DB_TYPE_SQLITE = "SQLite";
+    public static final String PROP_DB_TYPE_SQLSERVER = "SQLServer";
+    public static final String PROP_DB_TYPE_SQLSERVER_2005 = "SQLServer2005";
+    public static final String PROP_DB_TYPE_SQLSERVER_2008 = "SQLServer2008";
+    public static final String PROP_DB_TYPE_SQLSERVER_2012 = "SQLServer2012";
+    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
 
     public static final DBMSType getByProductNameAndMajorVersion(final String productName, final int majorVersion) {
         for (DBMSType type : values()) {

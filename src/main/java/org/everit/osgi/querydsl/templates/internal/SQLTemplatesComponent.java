@@ -29,6 +29,7 @@ import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.PropertyOption;
+import org.everit.osgi.querydsl.templates.DBMSType;
 import org.everit.osgi.querydsl.templates.SQLTemplatesConstants;
 import org.everit.osgi.querydsl.templates.UnknownDatabaseTypeException;
 import org.osgi.framework.BundleContext;
@@ -41,41 +42,42 @@ import com.mysema.query.sql.SQLTemplates.Builder;
 /**
  * Component that instantiates and registers SQLTemapltes objects as OSGi service.
  */
-@Component(name = SQLTemplatesConstants.COMPONENT_NAME_SQL_TEMPLATES, metatype = true, configurationFactory = true,
-        policy = ConfigurationPolicy.REQUIRE)
+@Component(name = SQLTemplatesConstants.SERVICE_FACTORY_PID__SQL_TEMPLATES, metatype = true,
+        configurationFactory = true,
+policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-        @Property(name = SQLTemplatesConstants.PROP_DB_TYPE, value = SQLTemplatesConstants.PROP_DB_TYPE_H2,
-                options = {
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_H2,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_H2),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_POSTGRES),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_MYSQL),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_ORACLE),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLITE),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_CUBRID),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_DERBY,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_DERBY),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_HSQLDB),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_TERADATA),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2005),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2008),
-                        @PropertyOption(name = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012,
-                                value = SQLTemplatesConstants.PROP_DB_TYPE_SQLSERVER_2012) }),
-        @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = true),
-        @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\')
+    @Property(name = SQLTemplatesConstants.PROP_DB_TYPE, value = DBMSType.PROP_DB_TYPE_H2,
+            options = {
+            @PropertyOption(name = DBMSType.PROP_DB_TYPE_H2,
+                    value = DBMSType.PROP_DB_TYPE_H2),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_POSTGRES,
+                    value = DBMSType.PROP_DB_TYPE_POSTGRES),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_MYSQL,
+                    value = DBMSType.PROP_DB_TYPE_MYSQL),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_ORACLE,
+                    value = DBMSType.PROP_DB_TYPE_ORACLE),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_SQLITE,
+                    value = DBMSType.PROP_DB_TYPE_SQLITE),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_CUBRID,
+                    value = DBMSType.PROP_DB_TYPE_CUBRID),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_DERBY,
+                    value = DBMSType.PROP_DB_TYPE_DERBY),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_HSQLDB,
+                    value = DBMSType.PROP_DB_TYPE_HSQLDB),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_TERADATA,
+                    value = DBMSType.PROP_DB_TYPE_TERADATA),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_SQLSERVER,
+                    value = DBMSType.PROP_DB_TYPE_SQLSERVER),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_SQLSERVER_2005,
+                    value = DBMSType.PROP_DB_TYPE_SQLSERVER_2005),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_SQLSERVER_2008,
+                    value = DBMSType.PROP_DB_TYPE_SQLSERVER_2008),
+                    @PropertyOption(name = DBMSType.PROP_DB_TYPE_SQLSERVER_2012,
+                    value = DBMSType.PROP_DB_TYPE_SQLSERVER_2012) }),
+                    @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
+                    @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = true),
+                    @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
+                    @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\')
 })
 public class SQLTemplatesComponent {
 

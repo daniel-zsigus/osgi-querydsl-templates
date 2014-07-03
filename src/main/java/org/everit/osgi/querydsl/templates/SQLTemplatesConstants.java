@@ -16,8 +16,6 @@
  */
 package org.everit.osgi.querydsl.templates;
 
-import org.everit.osgi.querydsl.templates.internal.DBMSType;
-
 /**
  * Use {@link DBMSType} instead.
  *
@@ -25,25 +23,12 @@ import org.everit.osgi.querydsl.templates.internal.DBMSType;
  */
 public final class SQLTemplatesConstants {
 
-    public static final String COMPONENT_NAME_AUTO_SQL_TEMPLATES =
+    public static final String SERVICE_FACTORY_PID__AUTO_SQL_TEMPLATES =
             "org.everit.osgi.querydsl.templates.AutoSQLTemplates";
-    public static final String COMPONENT_NAME_SQL_TEMPLATES = "org.everit.osgi.querydsl.templates.SQLTemplates";
+    public static final String SERVICE_FACTORY_PID__SQL_TEMPLATES = "org.everit.osgi.querydsl.templates.SQLTemplates";
 
     public static final String PROP_DB_TYPE = "dbtype";
-    public static final String PROP_DB_TYPE_CUBRID = "CUBRID";
-    public static final String PROP_DB_TYPE_DERBY = "Derby";
-    public static final String PROP_DB_TYPE_H2 = "H2";
-    public static final String PROP_DB_TYPE_HSQLDB = "HSQLDB";
-    public static final String PROP_DB_TYPE_MYSQL = "MySQL";
-    public static final String PROP_DB_TYPE_ORACLE = "Oracle";
-    public static final String PROP_DB_TYPE_POSTGRES = "Postgres";
-    public static final String PROP_DB_TYPE_SQLITE = "SQLite";
-    public static final String PROP_DB_TYPE_SQLSERVER = "SQLServer";
-    public static final String PROP_DB_TYPE_SQLSERVER_2005 = "SQLServer2005";
-    public static final String PROP_DB_TYPE_SQLSERVER_2008 = "SQLServer2008";
-    public static final String PROP_DB_TYPE_SQLSERVER_2012 = "SQLServer2012";
 
-    public static final String PROP_DB_TYPE_TERADATA = "Teradata";
     public static final String PROP_ESCAPE = "escape";
     public static final String PROP_NEWLINETOSINGLESPACE = "newLineToSingleSpace";
     public static final String PROP_PRINTSCHEMA = "printSchema";
