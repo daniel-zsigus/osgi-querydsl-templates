@@ -88,7 +88,9 @@ public class SQLTemplatesComponent {
      * service using {@code context}.
      *
      * @param context
+     *            bundle context
      * @param componentProperties
+     *            component properties
      * @throws ComponentException
      */
     @Activate
@@ -111,6 +113,7 @@ public class SQLTemplatesComponent {
      * Unregisters the {@link SQLTemplates} instance which has been registered by {@link #activate(BundleContext, Map)}.
      *
      * @param context
+     *            bundle context
      */
     @Deactivate
     public void deactivate(final BundleContext context) {

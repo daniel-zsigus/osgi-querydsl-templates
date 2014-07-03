@@ -47,14 +47,14 @@ import com.mysema.query.sql.SQLTemplates.Builder;
  * right type of SQLTemplates instance.
  */
 @Component(name = SQLTemplatesConstants.SERVICE_FACTORY_PID__AUTO_SQL_TEMPLATES,
-        metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
+metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Properties({
-        @Property(name = "dataSource.target"),
-        @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
-        @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\'),
-        @Property(name = "logService.target")
+    @Property(name = "dataSource.target"),
+    @Property(name = SQLTemplatesConstants.PROP_PRINTSCHEMA, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_QUOTE, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_NEWLINETOSINGLESPACE, boolValue = false),
+    @Property(name = SQLTemplatesConstants.PROP_ESCAPE, charValue = '\\'),
+    @Property(name = "logService.target")
 })
 public class AutoSQLTemplatesComponent {
 
@@ -80,7 +80,9 @@ public class AutoSQLTemplatesComponent {
      * registers it as an OSGi service.
      *
      * @param context
+     *            bundle context
      * @param componentProperties
+     *            component properties
      */
     @Activate
     public void activate(final BundleContext context, final Map<String, Object> componentProperties) {

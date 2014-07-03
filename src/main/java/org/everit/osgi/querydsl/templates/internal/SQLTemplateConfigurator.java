@@ -36,7 +36,7 @@ public final class SQLTemplateConfigurator {
     /**
      * @param sqlTemplate
      *            The sql template to be configured.
-     * @param properties
+     * @param config
      *            The component configuration to be used to set up the {@code sqlTemplate}
      * @throws NullPointerException
      *             if any of the parameters is {@code null}
@@ -55,9 +55,6 @@ public final class SQLTemplateConfigurator {
 
     /**
      * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the component.
-     *
-     *
-     *
      */
     public void configure() {
         if (getBooleanProp(SQLTemplatesConstants.PROP_PRINTSCHEMA)) {
@@ -77,6 +74,7 @@ public final class SQLTemplateConfigurator {
 
     /**
      * @param name
+     *            the name of the property to be obtained from {@code config}.
      * @return {@link Boolean#FALSE} if config[name] is not found
      */
     private Boolean getBooleanProp(final String name) {
