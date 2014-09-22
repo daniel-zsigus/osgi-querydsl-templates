@@ -12,3 +12,5 @@ it possible to create SQLTemplates instances via configuration.
 
 To see the all the configuration possibilities, deploy the module to your
 OSGi container and check the configuration possibilities in webconsole.
+
+[![Analytics](https://ga-beacon.appspot.com/UA-15041869-4/everit-org/osgi-querydsl-templates)](https://github.com/igrigorik/ga-beacon)
