@@ -80,7 +80,8 @@ import aQute.bnd.annotation.headers.ProvideCapability;
     @StringAttribute(attributeId = Constants.SERVICE_DESCRIPTION,
         defaultValue = SQLTemplatesConstants.DEFAULT_SERVICE_DESCRIPTION_SQL_TEMPLATES,
         label = "Service description",
-        description = "Optional description for the instantiated Jetty server.") })
+        description = "The description of this component configuration. It is used to easily "
+            + "identify the service registered by this component.") })
 public class SQLTemplatesComponent extends AbstractSQLTemplatesComponent {
 
   private SQLTemplates sqlTemplate;
