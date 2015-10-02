@@ -18,7 +18,6 @@ package org.everit.persistence.querydsl.sqltemplates.ecm;
 /**
  * Exception that says if the database type could not have been determined based on the production
  * name and version of the database.
- *
  */
 public class UnknownDatabaseTypeException extends RuntimeException {
 

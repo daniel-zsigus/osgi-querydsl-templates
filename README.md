@@ -1,5 +1,5 @@
-osgi-querydsl-templates
-=======================
+querydsl-sqltemplates-ecm
+=========================
 
 The Everit - QueryDSL Templates module contains two Components that makes
 it possible to create SQLTemplates instances via configuration.
