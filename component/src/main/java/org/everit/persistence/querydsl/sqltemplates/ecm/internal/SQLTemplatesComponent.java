@@ -79,6 +79,7 @@ import aQute.bnd.annotation.headers.ProvideCapability;
                 value = DBMSType.TYPE_SQLSERVER_2012) }),
     @StringAttribute(attributeId = Constants.SERVICE_DESCRIPTION,
         defaultValue = SQLTemplatesConstants.DEFAULT_SERVICE_DESCRIPTION_SQL_TEMPLATES,
+        priority = SQLTemplatesAttributePriority.P00_SERVICE_DESCRIPTION,
         label = "Service description",
         description = "The description of this component configuration. It is used to easily "
             + "identify the service registered by this component.") })

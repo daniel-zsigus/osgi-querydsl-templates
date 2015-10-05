@@ -20,6 +20,8 @@ package org.everit.persistence.querydsl.sqltemplates.ecm.internal;
  */
 public final class AutoSQLTemplatesAttributePriority {
 
+  public static final int P00_SERVICE_DESCRIPTION = 0;
+
   public static final int P01_DATA_SOURCE = 1;
 
   public static final int P10_LOG_SERVICE = 10;
