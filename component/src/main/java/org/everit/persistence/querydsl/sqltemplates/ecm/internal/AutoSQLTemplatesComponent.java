@@ -54,6 +54,7 @@ import aQute.bnd.annotation.headers.ProvideCapability;
 @StringAttributes({
     @StringAttribute(attributeId = Constants.SERVICE_DESCRIPTION,
         defaultValue = SQLTemplatesConstants.DEFAULT_SERVICE_DESCRIPTION_AUTO_SQL_TEMPLATES,
+        priority = AutoSQLTemplatesAttributePriority.P00_SERVICE_DESCRIPTION,
         label = "Service description",
         description = "The description of this component configuration. It is used to easily "
             + "identify the service registered by this component.") })
