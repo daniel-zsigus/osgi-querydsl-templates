@@ -19,6 +19,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.everit.osgi.ecm.annotation.Deactivate;
+import org.everit.osgi.ecm.annotation.ManualService;
 import org.everit.osgi.ecm.annotation.attribute.BooleanAttribute;
 import org.everit.osgi.ecm.annotation.attribute.BooleanAttributes;
 import org.everit.osgi.ecm.annotation.attribute.CharacterAttribute;
@@ -50,6 +51,7 @@ import com.mysema.query.sql.SQLTemplates;
     @CharacterAttribute(attributeId = SQLTemplatesConstants.ATTR_ESCAPE, defaultValue = '\\',
         priority = SQLTemplatesAttributePriority.P08_ESCAPE, label = "Escape character",
         description = "Escape character.") })
+@ManualService(SQLTemplates.class)
 public abstract class AbstractSQLTemplatesComponent {
 
   /**

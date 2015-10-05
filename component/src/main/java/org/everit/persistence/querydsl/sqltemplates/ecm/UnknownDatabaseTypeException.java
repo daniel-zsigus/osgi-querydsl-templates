@@ -22,7 +22,7 @@ package org.everit.persistence.querydsl.sqltemplates.ecm;
 public class UnknownDatabaseTypeException extends RuntimeException {
 
   /**
-   * .
+   * Serial version UID.
    */
   private static final long serialVersionUID = -7422125247222807335L;
 
