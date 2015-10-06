@@ -24,7 +24,6 @@ import org.everit.persistence.querydsl.sqltemplates.ecm.internal.SQLTemplateConf
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.osgi.service.component.ComponentException;
 
 import com.mysema.query.sql.H2Templates;
 import com.mysema.query.sql.SQLTemplates.Builder;
@@ -69,11 +68,11 @@ public class SQLTemplateConfiguratorTest {
 
   @Test
   public void setPrintSchemaNullValue() {
-    subject(Collections.<String, Object> emptyMap()).configure();
+    subject(Collections.<String, Object>emptyMap()).configure();
     Assert.assertFalse(sqlTemplates.build().isPrintSchema());
   }
 
-  @Test(expected = ComponentException.class)
+  @Test(expected = IllegalStateException.class)
   public void setPrintSchemaTypeMismatch() {
     subject(config(SQLTemplatesConstants.ATTR_PRINT_SCHEMA, "invalid")).configure();
   }

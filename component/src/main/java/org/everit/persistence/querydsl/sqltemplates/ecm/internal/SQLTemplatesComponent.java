@@ -30,7 +30,6 @@ import org.everit.persistence.querydsl.sqltemplates.ecm.DBMSType;
 import org.everit.persistence.querydsl.sqltemplates.ecm.SQLTemplatesConstants;
 import org.everit.persistence.querydsl.sqltemplates.ecm.UnknownDatabaseTypeException;
 import org.osgi.framework.Constants;
-import org.osgi.service.component.ComponentException;
 
 import com.mysema.query.sql.SQLTemplates;
 import com.mysema.query.sql.SQLTemplates.Builder;
@@ -91,7 +90,7 @@ public class SQLTemplatesComponent extends AbstractSQLTemplatesComponent {
    * Configures an {@link SQLTemplates} instance based on {@code componentProperties} and registers
    * it as an OSGi service using {@code context}.
    *
-   * @throws ComponentException
+   * @throws IllegalStateException
    *           if problem with to create service register.
    */
   @Activate
@@ -103,9 +102,9 @@ public class SQLTemplatesComponent extends AbstractSQLTemplatesComponent {
       new SQLTemplateConfigurator(sqlTemplateBuilder, componentProperties).configure();
       sqlTemplate = sqlTemplateBuilder.build();
     } catch (UnknownDatabaseTypeException e) {
-      throw new ComponentException(e);
+      throw new IllegalStateException(e);
     } catch (NullPointerException | ClassCastException e) {
-      throw new ComponentException(SQLTemplatesConstants.ATTR_DB_TYPE
+      throw new IllegalStateException(SQLTemplatesConstants.ATTR_DB_TYPE
           + " property must be set and must be a String", e);
     }
 

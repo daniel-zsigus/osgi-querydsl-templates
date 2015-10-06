@@ -31,7 +31,6 @@ import org.everit.osgi.ecm.extender.ECMExtenderConstants;
 import org.everit.persistence.querydsl.sqltemplates.ecm.DBMSType;
 import org.everit.persistence.querydsl.sqltemplates.ecm.SQLTemplatesConstants;
 import org.osgi.framework.Constants;
-import org.osgi.service.component.ComponentException;
 import org.osgi.service.log.LogService;
 
 import com.mysema.query.sql.SQLTemplates;
@@ -86,7 +85,8 @@ public class AutoSQLTemplatesComponent extends AbstractSQLTemplatesComponent {
       dbProductName = conn.getMetaData().getDatabaseProductName();
       dbMajorVersion = conn.getMetaData().getDatabaseMajorVersion();
     } catch (SQLException e) {
-      throw new ComponentException("Cannot get Database product name of the given DataSource.", e);
+      throw new IllegalStateException(
+          "Cannot get Database product name of the given DataSource.", e);
     }
 
     sqlTemplateBuilder = DBMSType.getByProductNameAndMajorVersion(dbProductName, dbMajorVersion)

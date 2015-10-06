@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.everit.persistence.querydsl.sqltemplates.ecm.SQLTemplatesConstants;
-import org.osgi.service.component.ComponentException;
 
 import com.mysema.query.sql.SQLTemplates.Builder;
 
@@ -48,13 +47,6 @@ public final class SQLTemplateConfigurator {
     this.config = Objects.requireNonNull(config, "config cannot be null");
   }
 
-  private ComponentException componentExceptionForInvalidValue(final String name,
-      final Object rawValue, final String expectedType) {
-    return new ComponentException(
-        "config[" + name + "] is expected to be a " + expectedType + ", got "
-            + (rawValue != null ? rawValue.getClass() : "null") + " instead");
-  }
-
   /**
    * Sets the properties for an instantiated SQLTemplates builder based on the configuration of the
    * component.
@@ -75,6 +67,13 @@ public final class SQLTemplateConfigurator {
     }
   }
 
+  private IllegalStateException exceptionForInvalidValue(final String name,
+      final Object rawValue, final String expectedType) {
+    return new IllegalStateException(
+        "config[" + name + "] is expected to be a " + expectedType + ", got "
+            + (rawValue != null ? rawValue.getClass() : "null") + " instead");
+  }
+
   /**
    * Gets boolean property value.
    *
@@ -88,7 +87,7 @@ public final class SQLTemplateConfigurator {
       rawValue = config.getOrDefault(name, Boolean.FALSE);
       return (Boolean) rawValue;
     } catch (ClassCastException e) {
-      throw componentExceptionForInvalidValue(name, rawValue, "Boolean");
+      throw exceptionForInvalidValue(name, rawValue, "Boolean");
     }
   }
 
@@ -105,7 +104,7 @@ public final class SQLTemplateConfigurator {
       rawValue = config.get(name);
       return (Character) rawValue;
     } catch (ClassCastException e) {
-      throw componentExceptionForInvalidValue(name, rawValue, "Character");
+      throw exceptionForInvalidValue(name, rawValue, "Character");
     }
   }
 
